@@ -1,31 +1,31 @@
-import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
+import { galleryItems } from './gallery-items.js';
+// Change code below this line
 
-import { galleryItems } from './galleryItems';
+console.log(galleryItems);
 
-document.addEventListener('DOMContentLoaded', function() {
-  const gallery = new SimpleLightbox('.gallery a', {
-    captions: true,
-    captionsData: 'alt',
-    captionDelay: 250,
-  });
+const list = document.querySelector('.gallery')
 
-  const galleryElement = document.querySelector('.gallery');
-  galleryItems.forEach(item => {
-    const listItem = document.createElement('li');
-    listItem.classList.add('gallery__item');
+function markup(items) {
+  return items.map((item) => `<li class="gallery__item">
+    <a class="gallery__link" href="${item.original}">
+       <img class="gallery__image" src="${item.preview}" alt="${item.description}" />
+    </a>
+ </li>`).join("")
+}
 
-    const link = document.createElement('a');
-    link.classList.add('gallery__link');
-    link.href = item.original;
 
-    const image = document.createElement('img');
-    image.classList.add('gallery__image');
-    image.src = item.preview;
-    image.alt = item.description;
+list.insertAdjacentHTML('beforeend', markup(galleryItems))
 
-    link.appendChild(image);
-    listItem.appendChild(link);
-    galleryElement.appendChild(listItem);
-  });
-});
+list.addEventListener('click', onClick)
+function onClick(evt) {
+  evt.preventDefault()
+  if (evt.target.tagName !== 'IMG') {
+    return
+  }
+}
+
+new SimpleLightbox('.gallery a', {
+  captionDelay: 250,
+  captionsData: 'alt',
+  captionPosition: 'bottom'
+}); 
